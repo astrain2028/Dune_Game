@@ -16,13 +16,6 @@ Collect all 5 required habitat components and donate them to power the habitat b
 g++ -std=c++11 -Wall *.cpp -o dune_game
 ./dune_game
 
-## How to Play
-
-## How to compile and run
-
-g++ -std=c++11 -Wall *.cpp -o dune_game
-./dune_game
-
 ## How to play
 
 Every turn you pick an option from the main menu: view your dashboard or the map, travel,
