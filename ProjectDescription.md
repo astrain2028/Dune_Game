@@ -13,11 +13,33 @@ Collect all 5 required habitat components and donate them to power the habitat b
 
 ## How to Compile and Run
 
-TBA
+g++ -std=c++11 -Wall *.cpp -o dune_game
+./dune_game
 
 ## How to Play
 
-TBA
+## How to compile and run
+
+g++ -std=c++11 -Wall *.cpp -o dune_game
+./dune_game
+
+## How to play
+
+Every turn you pick an option from the main menu: view your dashboard or the map, travel,
+search your current location, talk to someone, use an item, donate components at Sietch Tabr,
+or end the day.
+
+- Each day you have 4 actions. Traveling, searching, and talking each cost one.
+- Travel uses BFS pathfinding over the map graph — the further the destination, the more your
+  stillsuit wears down along the way.
+- Searching harvests spice and can uncover hidden components. Fremen allies repair your
+  stillsuit, source spice, and trade components for spice once you have earned their trust.
+- Harkonnen and Imperial characters sell components instantly, but raise your Betrayal.
+  At Betrayal 50+ the Fremen refuse to help you.
+
+Win: donate all 5 habitat components at Sietch Tabr before the end of Day 10. Your ending
+depends on your final Betrayal level and how many Fremen quests you completed.
+Lose: your stillsuit integrity reaches 0, your Betrayal reaches 100, or the deadline passes.
 
 ## Classes
 
