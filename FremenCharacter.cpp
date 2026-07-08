@@ -2,6 +2,7 @@
 #include <iostream>
 
 FremenCharacter::FremenCharacter() : Character() {
+    // Default constructor
     repairAmount = 0;
     willingToHelp = true;
     spiceToProvide = 0;
@@ -13,6 +14,7 @@ FremenCharacter::FremenCharacter(std::string name, std::string location, int fri
                                  std::string questDescription, std::string questReward,
                                  int spiceCost, int repair, int spiceGift)
     : Character(name, location, friendship, questDescription, questReward) {
+    // Constructor
     repairAmount = repair;
     willingToHelp = true;
     spiceToProvide = spiceGift;
@@ -33,14 +35,16 @@ int FremenCharacter::getQuestSpiceCost() {
 }
 
 void FremenCharacter::updateWillingness(int betrayal) {
+    // Trust Policy: the Fremen stop helping once Betrayal reaches 50
     willingToHelp = betrayal < 50;
 }
 
 int FremenCharacter::repairStillsuit(int betrayal) {
+    // Validation Policy
     if (!willingToHelp || betrayal >= 50) {
         return 0;
     }
-    // the more Dr. Strain has betrayed the Fremen, the less care they take
+    // Quality Policy: the more Dr. Strain has betrayed the Fremen, the less care they take
     int amount = repairAmount - betrayal / 2;
     if (amount < 10) {
         amount = 10;
@@ -49,6 +53,7 @@ int FremenCharacter::repairStillsuit(int betrayal) {
 }
 
 int FremenCharacter::sourceSpice() {
+    // Validation Policy: each Fremen sources spice only once
     if (spiceGiven || !willingToHelp) {
         return 0;
     }

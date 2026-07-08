@@ -1,128 +1,105 @@
-# CSCI1300_Final
-Final project for CSCI1300
-
-# CSCI 1300 Final Project - Project Description
+# Project Description: Dune — Shelter for the Fremen
 
 ## Theme
 
-Dune. The player is Dr. Austin Strain, a scientist stranded on the desert planet Arrakis. The Fremen, the native people of Arrakis, are struggling to survive in the harsh environment. Dr. Strain must power up a habitat that will make life survivable for the Fremen before the mission deadline runs out. Standing in the way are powerful corporate and political forces including the Harkonnens, CHOAM, and the Emperor, all of whom want to exploit Arrakis for its spice rather than let the Fremen thrive.
+You play as Dr. Austin Strain, a scientist stranded on the desert planet Arrakis. The Fremen,
+the native people of Arrakis, are struggling to survive in the harsh desert environment. Your
+goal is to collect five critical habitat components and donate them to power up a shelter for
+the Fremen before your ten day mission deadline runs out.
 
-## Goal
+The five components are Spice Melange, a Water Cache, Atomics, a Shield Generator Component,
+and a Crysknife. Each item must be found, earned, or purchased through exploration and
+character interactions across six locations: the Research Outpost, Arrakeen, Sietch Tabr, the
+Harkonnen Outpost, the Emperor's Palace, and the Sandworm Fields. Eleven characters from the
+Dune universe, spanning four factions, either help you or tempt you into dangerous deals.
 
-Collect all 5 required habitat components and donate them to power the habitat before Day 10 ends. The ending the player receives depends on how many shortcuts they took from corporate factions, whether they completed Stilgar's quest to secure the Atomics, and whether their stillsuit held out long enough to survive the journey.
+## Planned Classes
 
-## How to Compile and Run
+- **Item** — a single collectible object: name, type, spice value, whether it is a habitat
+  (bundle) component, and how much stillsuit integrity it restores when used.
+- **Character** — base class every character type inherits from: name, location, friendship
+  level, quest description, quest completion state, and quest reward.
+- **FremenCharacter** (inherits Character) — Chani, Stilgar, Shai-Hulud. Repair the stillsuit
+  based on Betrayal level, offer bundle items through quests, and source spice.
+- **AtreidesCharacter** (inherits Character) — Paul, Jessica, Gurney. Give hints and unlock
+  locations without raising Betrayal.
+- **HarkonnenCharacter** (inherits Character) — Feyd-Rautha, Rabban, the Baron. Offer shortcut
+  items that raise the Betrayal counter.
+- **ImperialCHOAMCharacter** (inherits Character) — the Emperor and the CHOAM Representative.
+  The most powerful shortcuts at the highest Betrayal cost, with a political influence tracker.
+- **Player** — Dr. Strain: current day, stillsuit integrity, spice, current location, an
+  inventory of Item objects, Betrayal counter, and actions remaining.
+- **Bundle** — tracks the five required habitat components in an Item array with a parallel
+  boolean array of what has been donated.
+- **Location** — a visitable place: description, locked/unlocked state, and an array of
+  connected location names that feeds the BFS pathfinder.
+- **Game** — the master class: runs the game loop, menus, dashboard, map, character
+  interactions, win/loss checks, and endings.
 
-g++ -std=c++11 -Wall *.cpp -o dune_game
-./dune_game
+## Limited Resources
 
-## How to play
+- **Spice** is the currency. You start with 20 and earn more by searching locations (the
+  Sandworm Fields are richest) or asking Fremen allies to source it. Fremen quests and all
+  faction shortcuts cost spice, and there is not enough to buy everything — you must choose.
+- **Stillsuit integrity** is the survival resource (0–100). Traveling, searching, and ending
+  the day all wear it down. If it reaches 0, the desert kills you. It can only be restored by
+  Fremen repairs (which degrade as your Betrayal rises) or a consumable water item.
+- **Actions** are the daily budget: 4 per day, spent on travel, searching, and talking.
 
-Every turn you pick an option from the main menu: view your dashboard or the map, travel,
-search your current location, talk to someone, use an item, donate components at Sietch Tabr,
-or end the day.
+## Handling Time
 
-- Each day you have 4 actions. Traveling, searching, and talking each cost one.
-- Travel uses BFS pathfinding over the map graph — the further the destination, the more your
-  stillsuit wears down along the way.
-- Searching harvests spice and can uncover hidden components. Fremen allies repair your
-  stillsuit, source spice, and trade components for spice once you have earned their trust.
-- Harkonnen and Imperial characters sell components instantly, but raise your Betrayal.
-  At Betrayal 50+ the Fremen refuse to help you.
-
-Win: donate all 5 habitat components at Sietch Tabr before the end of Day 10. Your ending
-depends on your final Betrayal level and how many Fremen quests you completed.
-Lose: your stillsuit integrity reaches 0, your Betrayal reaches 100, or the deadline passes.
-
-## Classes
-
-### Item
-Represents a single collectible object in the game world. Stores the item name, type, spice value, whether it is required for the habitat bundle, and how much stillsuit integrity it restores if used. Examples include Spice Melange, Water Cache, Atomics, Shield Generator Component, and Crysknife.
-
-### Bundle
-Tracks the 5 required habitat components. Stores an array of required Item objects and a parallel array of booleans tracking which have been donated. Provides functions to check whether a specific item is still needed, donate an item, check whether the bundle is complete, and display current progress.
-
-### Character
-Represents a named character Dr. Strain can interact with. Stores the character name, home location, a quest description, whether their quest has been completed, and a reward item. Characters can talk, give quests, give rewards, and affect the Betrayal counter or Fremen trust depending on who they are. Characters include Paul Atreides, Chani, Stilgar, Jessica, Gurney, Feyd-Rautha, Shai Hulud, and the Emperor.
-
-### Player
-Represents Dr. Austin Strain. Stores the player name, current day, stillsuit integrity, spice amount, current location, an inventory array of Item objects, and the Betrayal counter. Provides functions to move between locations, add and remove items, spend and earn spice, degrade and repair the stillsuit, and display current stats.
-
-### Location
-Represents a visitable place on Arrakis. Stores the location name, a short description, whether it is currently unlocked, and an array of connected location names used for map display and pathfinding. Provides functions to unlock the location and retrieve its connections for the BFS algorithm.
-
-### Game
-The top level class that owns and coordinates everything. Stores a Player, an array of Characters, an array of Locations, and a Bundle. Runs the main game loop, displays the dashboard and map, processes player menu choices, handles character interactions and donations, tracks win and loss conditions, and displays the final ending.
-
-## Resources
-
-### Stillsuit Integrity
-Dr. Strain's stillsuit recycles body water to keep him alive. It starts at 10 each day and degrades with risky actions. Traveling through the Sandworm Fields costs 3 integrity, salvaging at the Harkonnen Outpost costs 2, and traveling between safe locations costs 1. Resting at the Research Outpost restores 5. Fremen characters repair it for free if Betrayal is 0 but charge spice if Betrayal is high. If stillsuit integrity hits 0 Dr. Strain dies of dehydration and the game ends immediately.
-
-### Spice
-Spice Melange is the currency of Arrakis and replaces gold. It is earned by harvesting in the Sandworm Fields or trading with certain characters. It is spent in Arrakeen, with CHOAM, or to bribe characters. Taking corporate shortcuts costs spice and raises Betrayal. Fremen characters may give spice as quest rewards.
-
-### Betrayal
-A counter that tracks how much Dr. Strain has cooperated with corporate and imperial factions. It goes up by 1 each time the player takes a shortcut from Feyd-Rautha, the Emperor, or CHOAM. It affects which ending the player receives and whether Fremen characters are willing to help freely or demand spice payment.
-
-## Time Limit
-
-The mission lasts 10 days. Each day the player has a set number of actions. When actions run out the day ends automatically. When Day 10 ends without all 5 habitat components donated, the game ends in a loss.
-
-## Tradeoff System
-
-Three corporate and imperial factions offer shortcuts to make the game easier in the short term at the cost of raising Betrayal.
-
-Feyd-Rautha at the Harkonnen Outpost can sell rare bundle items or repair the stillsuit for spice, skipping the need to complete Fremen quests.
-
-The Emperor at his Palace can grant access to locked locations or provide bundle items through political favors, raising Betrayal significantly.
-
-CHOAM operates through merchants in Arrakeen and offers the widest range of shortcuts including bundle items, spice, and stillsuit repair, all at the cost of raising Betrayal.
-
-Using these factions saves time and stillsuit integrity but pushes the player toward worse endings. The Fremen notice every deal made with their oppressors.
-
-## Map
-
-Arrakeen is the central hub that connects to all other locations. The map is displayed as an ASCII diagram in the dashboard on every turn. The player's current location is marked with an asterisk. Locked locations are shown with dashes around them until unlocked by completing the relevant character quest.
-
-Planned layout:
-
-Emperor's Palace
-      |
-Arrakeen -- Harkonnen Outpost
-      |
-Research Outpost -- Sandworm Fields
-      |
-Sietch Tabr
-
-## Win and Loss Conditions
-
-Best Ending - The Fremen Are Free
-All 5 items donated, Betrayal at 0, and Stilgar's quest completed to secure the Atomics in Sietch Tabr. The habitat powers up, terraforming begins, spice production collapses, and CHOAM and the Emperor lose their grip on the universe.
-
-Bittersweet Ending - A Fragile Peace
-All 5 items donated and Betrayal at 1 or 2. The habitat is powered but the Fremen distrust Dr. Strain. Terraforming begins slowly while corporate interests maintain a foothold on Arrakis.
-
-Bad Ending - CHOAM Wins
-All 5 items donated but Betrayal at 3 or more. CHOAM seizes the habitat and uses it to expand spice production. The Fremen remain oppressed.
-
-Mutual Destruction Ending - The Atomics Detonate
-All 5 items donated and Betrayal at 0, but Stilgar's quest was not completed. CHOAM sees they are losing control of Arrakis and detonates the Atomics. Everyone loses.
-
-Dehydration Ending - Lost in the Desert
-Stillsuit integrity hits 0 at any point. Dr. Strain dies in the desert. The habitat is never powered.
-
-Time Ending - The Mission Fails
-Day 10 ends without all 5 items donated. The Fremen are left without a habitat and Arrakis remains under corporate control.
+Time is measured in days with a hard deadline of Day 10. Each day grants 4 actions; when they
+are spent (or whenever the player chooses) the day ends, which advances the calendar, refreshes
+actions, and wears the stillsuit by 5. Losing happens the moment the calendar passes Day 10
+with the shelter incomplete.
 
 ## Extra Credit
 
-Option 1 - Shortest Path Algorithm
+- **BFS pathfinding (implemented):** the six locations form a graph, with each Location storing
+  its connections. Travel runs a breadth-first search across unlocked locations only, prints
+  the shortest route (e.g. `Research Outpost -> Arrakeen -> Harkonnen Outpost`), and charges
+  stillsuit wear per leg of the route, so distance has a real cost.
+- **Multiple endings (implemented):** the victory text changes based on the final Betrayal
+  level (0 = "Lisan al-Strain", under 50 = wary acceptance, 50+ = hollow victory) and reports
+  how many Fremen quests were completed. There are four distinct loss endings (stillsuit
+  failure, Betrayal 100, deadline passed, mission abandoned).
 
-A breadth first search algorithm will be implemented in the Game class to help the player navigate between locations. Since each Location stores an array of connected location names, BFS can walk those connections to find the shortest route from Dr. Strain's current location to any destination. The path and estimated stillsuit cost will be displayed to the player when they choose to travel. An array based queue with head and tail indices will be used to implement BFS without relying on any data structures outside of what was taught in class.
+## Tradeoff System
 
-Example output:
+The Harkonnens and the Imperium are this game's JojaMart. Every habitat component has two
+paths:
 
-Recommended route to Sietch Tabr
-Research Outpost to Arrakeen to Sietch Tabr
-Estimated stillsuit cost: 2
+- **The honorable path** — earn Fremen trust through conversation, then complete their quests,
+  or find components hidden in dangerous locations. Slower and more expensive in actions, but
+  it costs no Betrayal and keeps the Fremen willing to repair your stillsuit.
+- **The shortcut path** — buy the same components instantly from the Harkonnens (+20 Betrayal
+  each) or from the Emperor and CHOAM (+30 each). Faster, but at Betrayal 50 every Fremen
+  refuses to help you (no repairs, no quests, no spice), and at 100 you lose outright.
+
+The tension: shortcuts save precious days, but they cut you off from the only sustainable
+source of stillsuit repair — and taint your ending even if you win.
+
+## Mapping Style
+
+The map is a graph of six named locations rather than a grid. The in-game map screen lists
+every location with its lock status, the connections leading out of it, and a marker for the
+player's position:
+
+```
+============= MAP OF ARRAKIS =============
+* - Research Outpost
+      connects to: Arrakeen, Sandworm Fields
+  - Arrakeen
+      connects to: Research Outpost, Sietch Tabr, Harkonnen Outpost, Emperor's Palace
+  ...
+(* = your current location)
+```
+
+Arrakeen acts as the central hub; the Sandworm Fields are reachable only through the open
+desert routes, and three locations start locked until an Atreides ally opens them.
+
+## Win / Lose Conditions
+
+- **Win:** donate all five habitat components at Sietch Tabr on or before Day 10.
+- **Lose:** stillsuit integrity reaches 0, Betrayal reaches 100, the deadline passes with the
+  shelter incomplete, or the player abandons the mission.

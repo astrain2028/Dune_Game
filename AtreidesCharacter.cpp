@@ -2,14 +2,16 @@
 #include <iostream>
 
 AtreidesCharacter::AtreidesCharacter() : Character() {
-    hintMessage = "";
-    locationToUnlock = "";
+    // Default constructor
     hasUnlockedLocation = false;
 }
 
 AtreidesCharacter::AtreidesCharacter(std::string name, std::string location, int friendship,
                                      std::string hint, std::string unlockLocation)
     : Character(name, location, friendship, "", "") {
+    // Constructor
+    // Atreides characters give hints, not quests, so the base class's
+    // quest description and reward are left blank.
     hintMessage = hint;
     locationToUnlock = unlockLocation;
     hasUnlockedLocation = false;

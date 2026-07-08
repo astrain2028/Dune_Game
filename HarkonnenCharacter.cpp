@@ -2,15 +2,18 @@
 #include <iostream>
 
 HarkonnenCharacter::HarkonnenCharacter() : Character() {
+    // Default constructor
     betrayalIncrease = 0;
     shortcutCost = 0;
-    shortcutItem = "";
     dealtWith = false;
 }
 
 HarkonnenCharacter::HarkonnenCharacter(std::string name, std::string location, int friendship,
                                        int betrayal, int cost, std::string item)
     : Character(name, location, friendship, "", "") {
+    // Constructor
+    // Harkonnens sell shortcuts, not quests, so the base class's
+    // quest description and reward are left blank.
     betrayalIncrease = betrayal;
     shortcutCost = cost;
     shortcutItem = item;

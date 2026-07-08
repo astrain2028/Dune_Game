@@ -2,9 +2,9 @@
 #include <iostream>
 
 ImperialCHOAMCharacter::ImperialCHOAMCharacter() : Character() {
+    // Default constructor
     betrayalIncrease = 0;
     politicalInfluence = 0;
-    shortcutItem = "";
     shortcutCost = 0;
     betrayed = false;
 }
@@ -12,6 +12,9 @@ ImperialCHOAMCharacter::ImperialCHOAMCharacter() : Character() {
 ImperialCHOAMCharacter::ImperialCHOAMCharacter(std::string name, std::string location, int friendship,
                                                int betrayal, int cost, std::string item)
     : Character(name, location, friendship, "", "") {
+    // Constructor
+    // The Emperor and CHOAM sell deals, not quests, so the base class's
+    // quest description and reward are left blank.
     betrayalIncrease = betrayal;
     politicalInfluence = 0;
     shortcutItem = item;

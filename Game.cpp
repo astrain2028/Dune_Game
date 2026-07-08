@@ -9,11 +9,13 @@ const int SEARCH_WEAR = 5;
 const int NIGHT_WEAR = 5;
 
 Game::Game() {
+    // Constructor
     player = Player("Dr. Austin Strain", 20, "Research Outpost", ACTIONS_PER_DAY);
     gameOver = false;
     playerWon = false;
     lossReason = "";
 
+    // Set up the six locations
     locations[0] = Location("Research Outpost",
         "Your battered field lab. Sand hisses against the shutters.",
         true, 0, "Shield Generator Component");
@@ -33,7 +35,7 @@ Game::Game() {
         "Endless dunes where the great makers roam. The drumming of the sand calls them.",
         false, 15, "Spice Melange");
 
-    // the travel graph of Arrakis (used by the BFS pathfinder)
+    // Set up the travel graph of Arrakis (used by the BFS pathfinder)
     locations[0].addConnection("Arrakeen");
     locations[0].addConnection("Sandworm Fields");
     locations[1].addConnection("Research Outpost");
@@ -49,6 +51,7 @@ Game::Game() {
     locations[5].addConnection("Research Outpost");
     locations[5].addConnection("Sietch Tabr");
 
+    // Set up Atreides characters
     atreidesChars[0] = AtreidesCharacter("Paul Atreides", "Arrakeen", 50,
         "The makers guard the richest spice sands. Walk without rhythm and the Sandworm Fields are yours.",
         "Sandworm Fields");
@@ -59,6 +62,7 @@ Game::Game() {
         "The Harkonnens hoard stolen atomics at their outpost. Search it well, if you dare go.",
         "Harkonnen Outpost");
 
+    // Set up Fremen characters
     fremenChars[0] = FremenCharacter("Chani", "Sietch Tabr", 20,
         "Offer 15 spice to the sietch and our water sellers will part with a water cache.",
         "Water Cache", 15, 30, 10);
@@ -69,10 +73,12 @@ Game::Game() {
         "The maker rumbles beneath you. An offering of 25 spice to the desert may earn a tooth of the great worm.",
         "Crysknife", 25, 20, 25);
 
+    // Set up Harkonnen characters
     harkChars[0] = HarkonnenCharacter("Feyd-Rautha", "Harkonnen Outpost", 0, 20, 25, "Water Cache");
     harkChars[1] = HarkonnenCharacter("Glossu Rabban", "Harkonnen Outpost", 0, 20, 25, "Spice Melange");
     harkChars[2] = HarkonnenCharacter("Baron Harkonnen", "Harkonnen Outpost", 0, 20, 30, "Crysknife");
 
+    // Set up Imperial/CHOAM characters
     imperialChars[0] = ImperialCHOAMCharacter("Emperor Shaddam IV", "Emperor's Palace", 0,
                                               30, 40, "Atomics");
     imperialChars[1] = ImperialCHOAMCharacter("CHOAM Representative", "Emperor's Palace", 0,
@@ -80,23 +86,49 @@ Game::Game() {
 }
 
 int Game::readMenuChoice(int minChoice, int maxChoice) {
-    int choice;
+    // Validation Policy: keep asking until the input is a valid in-range number
     while (true) {
         std::cout << "> ";
-        if (std::cin >> choice && choice >= minChoice && choice <= maxChoice) {
-            return choice;
+        std::string input;
+        std::cin >> input;
+        int len = input.length();
+
+        // Manually check that every character is a digit
+        bool isNumber = (len > 0);
+        for (int i = 0; i < len; i++) {
+            if (input[i] < '0' || input[i] > '9') {
+                isNumber = false;
+            }
         }
-        std::cin.clear();
-        std::cin.ignore(10000, '\n'); // discard the rest of the bad input line
+
+        if (isNumber) {
+            // Manually convert the digit string to an int
+            int choice = 0;
+            for (int i = 0; i < len; i++) {
+                choice = choice * 10 + (input[i] - '0');
+            }
+            if (choice >= minChoice && choice <= maxChoice) {
+                return choice;
+            }
+        }
         std::cout << "Please enter a number between " << minChoice << " and " << maxChoice << "." << std::endl;
     }
 }
 
 bool Game::askYesNo() {
+    // Validation Policy: keep asking until the input is exactly y or n
     std::string answer;
-    std::cout << "(y/n) > ";
-    std::cin >> answer;
-    return answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes";
+    while (true) {
+        std::cout << "(y/n) > ";
+        std::cin >> answer;
+        if (answer == "y" || answer == "Y") {
+            return true;
+        }
+        if (answer == "n" || answer == "N") {
+            return false;
+        }
+        std::cout << "Please enter y or n." << std::endl;
+    }
 }
 
 int Game::findLocationIndex(std::string locationName) {
@@ -185,6 +217,7 @@ Item Game::makeItem(std::string itemName) {
 }
 
 bool Game::requireAction() {
+    // Validation Policy
     if (player.getActionsRemaining() <= 0) {
         std::cout << "You are exhausted. You must end the day before doing anything else." << std::endl;
         return false;
@@ -319,6 +352,7 @@ void Game::movePlayer() {
         return;
     }
     int destIndex = choice - 1;
+    // Validation Policy
     if (!locations[destIndex].isUnlocked()) {
         std::cout << "That location is locked. Perhaps an Atreides ally can help you." << std::endl;
         return;
@@ -328,6 +362,7 @@ void Game::movePlayer() {
         return;
     }
 
+    // Compute the shortest route with BFS
     int startIndex = findLocationIndex(player.getCurrentLocation());
     int path[NUM_LOCATIONS];
     int legs = findPathBFS(startIndex, destIndex, path);
@@ -345,6 +380,7 @@ void Game::movePlayer() {
     }
     std::cout << " (" << legs << " leg(s))" << std::endl;
 
+    // Travel Cost Policy: each leg wears down the stillsuit
     player.useAction();
     player.degradeStillsuit(legs * TRAVEL_WEAR_PER_LEG);
     player.moveTo(locations[destIndex].getName());
@@ -365,6 +401,7 @@ void Game::visitLocation() {
     player.degradeStillsuit(SEARCH_WEAR);
     std::cout << locations[li].getDescription() << std::endl;
 
+    // Harvest Policy: locations yield spice every time they are searched
     int spiceFound = locations[li].getSpiceYield();
     if (spiceFound > 0) {
         player.earnSpice(spiceFound);
@@ -374,6 +411,7 @@ void Game::visitLocation() {
         std::cout << "You find no spice here." << std::endl;
     }
 
+    // Discovery Policy: hidden items only appear once, and only if there's room
     if (locations[li].hasHiddenItem()) {
         if (player.getInventorySize() >= MAX_INVENTORY) {
             std::cout << "Something glints in the sand, but your pack is full!" << std::endl;
@@ -489,6 +527,7 @@ void Game::talkToFremen(int index) {
         std::cout << "You share stories of distant worlds. Friendship with "
                   << fremenChars[index].getName() << " is now " << newFriendship << "." << std::endl;
     } else if (choice == 2) {
+        // Validation Policy
         int amount = fremenChars[index].repairStillsuit(player.getBetrayal());
         if (amount <= 0) {
             std::cout << fremenChars[index].getName() << " cannot help you now." << std::endl;
@@ -499,6 +538,8 @@ void Game::talkToFremen(int index) {
         std::cout << fremenChars[index].getName() << " patches and seals your stillsuit (+"
                   << amount << "). Integrity: " << player.getStillsuitIntegrity() << "/100." << std::endl;
     } else if (choice == 3) {
+        // Validation Policy: quest must not already be done, item must still
+        // be needed, and friendship must be high enough to be trusted
         if (fremenChars[index].isQuestCompleted()) {
             std::cout << fremenChars[index].getName()
                       << ": \"You have already honored the sietch, Doctor.\"" << std::endl;
@@ -527,9 +568,10 @@ void Game::talkToFremen(int index) {
                       << player.getSpice() << ".)" << std::endl;
             return;
         }
+        // Refund Policy: give the spice back if there's no room for the reward
         if (player.getInventorySize() >= MAX_INVENTORY) {
             std::cout << "Your pack is full!" << std::endl;
-            player.earnSpice(fremenChars[index].getQuestSpiceCost()); // give it back
+            player.earnSpice(fremenChars[index].getQuestSpiceCost());
             return;
         }
         player.useAction();
@@ -539,6 +581,7 @@ void Game::talkToFremen(int index) {
         std::cout << fremenChars[index].getName() << ": \"Your water is ours, and ours is yours.\"" << std::endl;
         std::cout << "You receive: " << fremenChars[index].getQuestReward() << "." << std::endl;
     } else if (choice == 4) {
+        // Validation Policy
         int gift = fremenChars[index].sourceSpice();
         if (gift <= 0) {
             std::cout << fremenChars[index].getName()
@@ -554,6 +597,7 @@ void Game::talkToFremen(int index) {
 
 void Game::talkToHarkonnen(int index) {
     harkChars[index].displayDialogue();
+    // Validation Policy: one deal per Harkonnen, and only for items still needed
     if (harkChars[index].hasDealtWith()) {
         std::cout << harkChars[index].getName()
                   << ": \"We have already done business, Doctor. Do not press your luck.\"" << std::endl;
@@ -577,11 +621,13 @@ void Game::talkToHarkonnen(int index) {
         std::cout << "You cannot afford it. (You have " << player.getSpice() << " spice.)" << std::endl;
         return;
     }
+    // Refund Policy: give the spice back if there's no room for the item
     if (player.getInventorySize() >= MAX_INVENTORY) {
         std::cout << "Your pack is full!" << std::endl;
         player.earnSpice(harkChars[index].getShortcutCost());
         return;
     }
+    // Betrayal Cost: this is the tradeoff for the shortcut
     player.useAction();
     harkChars[index].acceptShortcut();
     player.increaseBetrayal(harkChars[index].getBetrayalIncrease());
@@ -592,6 +638,7 @@ void Game::talkToHarkonnen(int index) {
 
 void Game::talkToImperial(int index) {
     imperialChars[index].displayDialogue();
+    // Validation Policy: one deal per representative, and only for items still needed
     if (imperialChars[index].hasBetrayed()) {
         std::cout << imperialChars[index].getName()
                   << ": \"Our arrangement is concluded, Doctor.\"" << std::endl;
@@ -616,11 +663,13 @@ void Game::talkToImperial(int index) {
         std::cout << "You cannot afford it. (You have " << player.getSpice() << " spice.)" << std::endl;
         return;
     }
+    // Refund Policy: give the spice back if there's no room for the item
     if (player.getInventorySize() >= MAX_INVENTORY) {
         std::cout << "Your pack is full!" << std::endl;
         player.earnSpice(imperialChars[index].getShortcutCost());
         return;
     }
+    // Betrayal Cost: this is the tradeoff for the shortcut, higher than Harkonnen
     player.useAction();
     imperialChars[index].acceptDeal();
     player.increaseBetrayal(imperialChars[index].getBetrayalIncrease());
@@ -661,6 +710,7 @@ void Game::useItem() {
 }
 
 void Game::donateComponents() {
+    // Validation Policy: donations can only happen at Sietch Tabr
     if (player.getCurrentLocation() != "Sietch Tabr") {
         std::cout << "The Fremen shelter is being built at Sietch Tabr. Bring your components there." << std::endl;
         return;
@@ -688,6 +738,7 @@ void Game::donateComponents() {
 }
 
 void Game::endDay() {
+    // Time Policy: advancing the day refreshes actions but costs stillsuit wear
     player.advanceDay(ACTIONS_PER_DAY);
     player.degradeStillsuit(NIGHT_WEAR);
     std::cout << "Night falls over Arrakis. The desert cools and the stars burn clear." << std::endl;
@@ -703,14 +754,17 @@ bool Game::checkWin() {
 }
 
 bool Game::checkLoss() {
+    // Loss Condition: the desert kills you
     if (player.getStillsuitIntegrity() <= 0) {
         lossReason = "stillsuit";
         return true;
     }
+    // Loss Condition: the Fremen cast you out
     if (player.getBetrayal() >= MAX_BETRAYAL) {
         lossReason = "betrayal";
         return true;
     }
+    // Loss Condition: the deadline passes
     if (player.getCurrentDay() > MAX_DAYS) {
         lossReason = "time";
         return true;

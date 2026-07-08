@@ -3,16 +3,14 @@
 
 
 Character::Character() {
-    name = "";
-    location = "";
+    // Default constructor
     friendship = 0;
-    questDescription = "";
     questComplete = false;
-    questReward = "";
 }
 
 Character::Character(std::string characterName, std::string characterLocation, int characterFriendship,
                      std::string characterQuestDescription, std::string characterQuestReward) {
+    // Constructor
     name = characterName;
     location = characterLocation;
     friendship = characterFriendship;
@@ -43,6 +41,7 @@ bool Character::isQuestCompleted() {
 
 int Character::increaseFriendship(int amount) {
     friendship += amount;
+    // Cap Policy: friendship cannot exceed 100
     if (friendship > 100) {
         friendship = 100;
     }
