@@ -4,7 +4,6 @@
 ImperialCHOAMCharacter::ImperialCHOAMCharacter() : Character() {
     // Default constructor
     betrayalIncrease = 0;
-    politicalInfluence = 0;
     shortcutCost = 0;
     betrayed = false;
 }
@@ -16,7 +15,6 @@ ImperialCHOAMCharacter::ImperialCHOAMCharacter(std::string name, std::string loc
     // The Emperor and CHOAM sell deals, not quests, so the base class's
     // quest description and reward are left blank.
     betrayalIncrease = betrayal;
-    politicalInfluence = 0;
     shortcutItem = item;
     shortcutCost = cost;
     betrayed = false;
@@ -24,10 +22,6 @@ ImperialCHOAMCharacter::ImperialCHOAMCharacter(std::string name, std::string loc
 
 int ImperialCHOAMCharacter::getBetrayalIncrease() {
     return betrayalIncrease;
-}
-
-int ImperialCHOAMCharacter::getPoliticalInfluence() {
-    return politicalInfluence;
 }
 
 std::string ImperialCHOAMCharacter::getShortcutItem() {
@@ -49,13 +43,11 @@ void ImperialCHOAMCharacter::offerDeal() {
 }
 
 void ImperialCHOAMCharacter::acceptDeal() {
-    politicalInfluence++;
     betrayed = true;
     std::cout << getName() << ": \"Excellent. Consider it done. The Imperium does not forget "
               << "its... friends.\"" << std::endl;
 }
 
 void ImperialCHOAMCharacter::displayStatus() {
-    std::cout << getName() << " holds " << politicalInfluence
-              << " favor(s) over you." << std::endl;
+    std::cout << getName() << " considers your dealings concluded, Doctor." << std::endl;
 }

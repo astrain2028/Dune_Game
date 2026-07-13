@@ -26,7 +26,7 @@ Dune universe, spanning four factions, either help you or tempt you into dangero
 - **HarkonnenCharacter** (inherits Character) — Feyd-Rautha, Rabban, the Baron. Offer shortcut
   items that raise the Betrayal counter.
 - **ImperialCHOAMCharacter** (inherits Character) — the Emperor and the CHOAM Representative.
-  The most powerful shortcuts at the highest Betrayal cost, with a political influence tracker.
+  The most powerful shortcuts, at the highest Betrayal cost of any faction.
 - **Player** — Dr. Strain: current day, stillsuit integrity, spice, current location, an
   inventory of Item objects, Betrayal counter, and actions remaining.
 - **Bundle** — tracks the five required habitat components in an Item array with a parallel

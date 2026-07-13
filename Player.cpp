@@ -104,16 +104,16 @@ bool Player::spendSpice(int amount) {
     if (amount > spice) {
         return false;
     }
-    spice -= amount;
+    spice = spice - amount;
     return true;
 }
 
 void Player::earnSpice(int amount) {
-    spice += amount;
+    spice = spice + amount;
 }
 
 void Player::degradeStillsuit(int amount) {
-    stillsuitIntegrity -= amount;
+    stillsuitIntegrity = stillsuitIntegrity - amount;
     // Floor Policy: integrity cannot drop below zero
     if (stillsuitIntegrity < 0) {
         stillsuitIntegrity = 0;
@@ -121,7 +121,7 @@ void Player::degradeStillsuit(int amount) {
 }
 
 void Player::repairStillsuit(int amount) {
-    stillsuitIntegrity += amount;
+    stillsuitIntegrity = stillsuitIntegrity + amount;
     // Cap Policy: integrity cannot exceed 100
     if (stillsuitIntegrity > 100) {
         stillsuitIntegrity = 100;
@@ -129,7 +129,7 @@ void Player::repairStillsuit(int amount) {
 }
 
 void Player::increaseBetrayal(int amount) {
-    betrayal += amount;
+    betrayal = betrayal + amount;
 }
 
 bool Player::useAction() {

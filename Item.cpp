@@ -54,6 +54,9 @@ void Item::displayInfo(){
     if (bundleItem) {
         std::cout << " [habitat component]";
     }
+    if (calculateMelangeValue() > 0) {
+        std::cout << " [worth " << calculateMelangeValue() << " melange]";
+    }
     if (calculateStillSuitIntegrity() > 0) {
         std::cout << " [restores " << calculateStillSuitIntegrity() << " stillsuit integrity]";
     }

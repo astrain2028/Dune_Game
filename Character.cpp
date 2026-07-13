@@ -40,7 +40,7 @@ bool Character::isQuestCompleted() {
 }
 
 int Character::increaseFriendship(int amount) {
-    friendship += amount;
+    friendship = friendship + amount;
     // Cap Policy: friendship cannot exceed 100
     if (friendship > 100) {
         friendship = 100;

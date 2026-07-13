@@ -527,6 +527,8 @@ void Game::talkToFremen(int index) {
         std::cout << "You share stories of distant worlds. Friendship with "
                   << fremenChars[index].getName() << " is now " << newFriendship << "." << std::endl;
     } else if (choice == 2) {
+        std::cout << fremenChars[index].getName() << " can typically restore up to "
+                  << fremenChars[index].getRepairAmount() << " stillsuit integrity." << std::endl;
         // Validation Policy
         int amount = fremenChars[index].repairStillsuit(player.getBetrayal());
         if (amount <= 0) {
