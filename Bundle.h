@@ -9,6 +9,7 @@ class Bundle {
     private:
         Item requiredItems[BUNDLE_SIZE];    // the 5 habitat components the shelter needs
         bool donated[BUNDLE_SIZE];          // parallel array tracking which have been donated
+        void loadRequiredItems();           // reads the component list from items.txt
     public:
         Bundle();
         bool isItemNeeded(std::string itemName);    // required and not yet donated

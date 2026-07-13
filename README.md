@@ -63,10 +63,17 @@ depends on your final Betrayal level and how many Fremen quests you completed.
 | `HarkonnenCharacter.h/.cpp` | Harkonnen dealers: shortcut items that raise Betrayal. |
 | `ImperialCHOAMCharacter.h/.cpp` | Emperor/CHOAM: the most powerful shortcuts, highest Betrayal cost. |
 | `Player.h/.cpp` | Dr. Strain: day, stillsuit, spice, inventory, Betrayal, actions. |
-| `Bundle.h/.cpp` | Tracks the five required components and which have been donated. |
+| `Bundle.h/.cpp` | Tracks the five required components and which have been donated; loads the component list from `items.txt`. |
 | `Location.h/.cpp` | A visitable place: description, lock state, and graph connections for BFS. |
 | `Game.h/.cpp` | The master class: game loop, menus, interactions, win/loss, endings. |
 | `main.cpp` | Creates a Game object and calls startGame. Nothing else. |
+
+## File input
+
+The five required habitat components (name, type, and spice value) are read at startup from
+`items.txt`, a plain comma-separated text file in the project root, rather than being hardcoded
+in `Bundle`'s constructor. If the file is missing, `Bundle` falls back to a hardcoded default
+list so the game still runs.
 
 ## Extra credit
 

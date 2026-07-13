@@ -1,0 +1,5 @@
+Spice Melange,Spice,50
+Water Cache,Water,30
+Atomics,Weapon,100
+Shield Generator Component,Technology,60
+Crysknife,Weapon,40
