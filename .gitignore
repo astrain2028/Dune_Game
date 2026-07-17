@@ -6,3 +6,4 @@ build_log.txt
 build_error.txt
 .vscode/*
 !.vscode/tasks.json
+!.vscode/launch.json

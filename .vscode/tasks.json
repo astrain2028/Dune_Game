@@ -9,7 +9,7 @@
                 "-Wall",
                 "*.cpp",
                 "-o",
-                "dune_game.exe"
+                "main.exe"
             ],
             "options": {
                 "cwd": "${workspaceFolder}",
@@ -24,7 +24,7 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "detail": "Builds every .cpp file in the project into dune_game.exe"
+            "detail": "Builds every .cpp file in the project into main.exe"
         }
     ],
     "version": "2.0.0"

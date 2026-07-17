@@ -30,9 +30,12 @@ You will interact with eleven characters from the Dune universe spanning four fa
 ## How to compile and run
 
 ```
-g++ -std=c++11 -Wall *.cpp -o dune_game
-./dune_game
+g++ -std=c++11 -Wall *.cpp -o main.exe
+main.exe
 ```
+
+Opening the project in VS Code and using the built-in build/debug task produces the same
+`main.exe`, via `.vscode/tasks.json` and `.vscode/launch.json`.
 
 ## How to play
 
