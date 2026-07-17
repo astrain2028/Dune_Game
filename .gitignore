@@ -2,4 +2,7 @@
 *.o
 *.out
 compile_log.txt
-.vscode/
+build_log.txt
+build_error.txt
+.vscode/*
+!.vscode/tasks.json
