@@ -39,9 +39,10 @@ Opening the project in VS Code and using the built-in build/debug task produces 
 
 ## How to play
 
-Every turn you pick an option from the main menu: view your dashboard or the map, travel,
-search your current location, talk to someone, use an item, donate components at Sietch Tabr,
-or end the day.
+Every turn you pick an option from the main menu: view your dashboard (stats, inventory, bundle
+progress, and the map, all together), travel, search your current location, talk to someone,
+use an item, donate components at Sietch Tabr, or end the day. A standalone "View map" option
+is also available for a quick look without the full dashboard.
 
 - Each day you have 4 actions. Traveling, searching, and talking each cost one.
 - Travel uses BFS pathfinding over the map graph — the further the destination, the more your

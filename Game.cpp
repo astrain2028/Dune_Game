@@ -313,6 +313,7 @@ void Game::processChoice(int choice) {
 void Game::displayDashboard() {
     player.displayStats();
     bundle.displayProgress();
+    displayMap();
     std::cout << "===========================================" << std::endl;
 }
 
